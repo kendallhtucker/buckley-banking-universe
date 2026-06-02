@@ -668,43 +668,49 @@ body.hyperspace .hyperspace-overlay {
       10px 10px 0 var(--ramp-mag);
   }
 
-  /* On mobile, replace the 3D Star Wars crawl with a static, readable
-     disclaimer block. The crawl is great on wide screens but cramped
-     and unreadable on phones. */
+  /* Mobile crawl: keep the animation, drop the 3D rotation (which made
+     the text plane wider than the viewport and caused right-edge clipping). */
   .crawl-stage {
     position: relative;
     bottom: auto; left: auto; right: auto;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(-1 * 20px);     /* cancel parent padding */
+    margin-right: calc(-1 * 20px);
     margin-top: auto;                 /* push to bottom of flex */
-    height: auto;
+    height: 38vh;
     flex: 0 0 auto;
-    min-height: 0;
-    padding-bottom: 18px;
-    overflow: visible;
-    perspective: none;
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 100%);
+    perspective: none;                /* drop 3D — was causing overflow */
+    overflow: hidden;
   }
-  .crawl-stage::after { display: none; }   /* hide desktop fade overlay */
+  .crawl-stage::after {
+    background: linear-gradient(
+      to bottom,
+      var(--bg) 0%,
+      transparent 22%,
+      transparent 78%,
+      var(--bg) 100%
+    );
+  }
   .crawl-text {
-    position: static;
-    width: 100%;
-    max-width: 100%;
-    left: auto;
-    top: auto;
-    transform: none !important;       /* kill 3D rotation + animation transforms */
-    animation: none !important;
-    font-size: 10.5px;
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: calc(100vw - 40px);
+    max-width: calc(100vw - 40px);
+    font-size: 11px;
     letter-spacing: 0.3px;
     line-height: 1.55;
-    text-align: left;
+    text-align: left;                 /* justify caused overflow */
     word-wrap: break-word;
     overflow-wrap: break-word;
-    opacity: 0.7;
+    transform: translateX(-50%);      /* center horizontally, no rotateX */
   }
-  .crawl-text p { margin-bottom: 0.9em; }
   body.playing .crawl-text {
-    animation: none !important;
+    animation: crawlUpFlat 38s linear 1.5s infinite;
+  }
+  @keyframes crawlUpFlat {
+    0%   { top: 100%; }
+    100% { top: -180%; }
   }
 
   /* REPLAY: top-left under the bar */
