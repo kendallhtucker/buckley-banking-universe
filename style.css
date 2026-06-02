@@ -1,0 +1,556 @@
+/* ============================================================
+   BANKING UNIVERSE · v4
+   Click-to-play video placeholder → finale (tagline + CTA + crawl)
+   ============================================================ */
+
+:root {
+  --ramp-yellow: #ffcf3a;
+  --ramp-pink:   #ff8ad6;
+  --ramp-cyan:   #67e8ff;
+  --ramp-mag:    #ff3ec4;
+  --ink:         #0a0a12;
+  --paper:       #f8f3e3;
+  --bg:          #04040a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--paper);
+  font-family: 'IBM Plex Mono', monospace;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+/* ============================================================
+   BROADCAST BAR
+   ============================================================ */
+.broadcast-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 38px;
+  background: var(--ink);
+  border-bottom: 1px solid #1c1c2e;
+  display: flex;
+  align-items: center;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--ramp-yellow);
+  z-index: 100;
+  padding: 0 14px;
+  gap: 18px;
+}
+.bb-left, .bb-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  background: var(--ink);
+  position: relative;
+  z-index: 2;
+}
+.bb-left::after {
+  content: '|';
+  color: #444;
+  margin-left: 14px;
+}
+.bb-right::before {
+  content: '|';
+  color: #444;
+  margin-right: 14px;
+}
+.bb-mid {
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+.bb-marquee-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: marquee 22s linear infinite;
+  color: #8fa0ff;
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.bb-dot {
+  width: 10px; height: 10px;
+  background: #ff3030;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ff3030;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.bb-label { letter-spacing: 1px; }
+.bb-clock { color: var(--ramp-cyan); }
+.sound-toggle {
+  background: transparent;
+  border: 1px solid var(--ramp-yellow);
+  color: var(--ramp-yellow);
+  padding: 3px 9px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 2px;
+}
+.sound-toggle:hover { background: rgba(255,207,58,0.15); }
+.sound-toggle.on {
+  background: var(--ramp-yellow);
+  color: var(--ink);
+}
+
+/* ============================================================
+   STAGE + STARFIELD
+   ============================================================ */
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 38px;
+  overflow: hidden;
+}
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 70%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 80%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 50%, #ffd, transparent),
+    radial-gradient(1px 1px at 40% 90%, #fff, transparent),
+    radial-gradient(2px 2px at 35% 10%, #cdf, transparent),
+    radial-gradient(1px 1px at 70% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 60%, #fdf, transparent);
+  background-size: 600px 600px;
+  background-repeat: repeat;
+}
+.stars-back  { background-size: 800px 800px; opacity: 0.55; animation: drift 220s linear infinite; }
+.stars-mid   { background-size: 500px 500px; opacity: 0.7;  animation: drift 140s linear infinite reverse; }
+.stars-front { background-size: 350px 350px; opacity: 0.4;  animation: twinkle 4s ease-in-out infinite; }
+@keyframes drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 1000px 600px; }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+.vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+}
+.scanlines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.18) 3px,
+    rgba(0,0,0,0.18) 4px
+  );
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   VIDEO PLAYER (click-to-play frame)
+   ============================================================ */
+.player {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80vw, 1040px);
+  z-index: 10;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+body.playing .player {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+  pointer-events: none;
+}
+
+.player-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ink);
+  border: 3px solid var(--ramp-yellow);
+  box-shadow:
+    8px 8px 0 var(--ramp-pink),
+    16px 16px 0 var(--ramp-mag),
+    0 0 60px rgba(103,232,255,0.25),
+    0 0 120px rgba(255,138,214,0.18);
+  overflow: hidden;
+}
+
+.player-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(1.05);
+  display: block;
+}
+
+/* corner frame ticks */
+.frame-tick {
+  position: absolute;
+  width: 24px; height: 24px;
+  border: 2px solid var(--ramp-cyan);
+  pointer-events: none;
+  z-index: 4;
+}
+.tick-tl { top: 10px; left: 10px;  border-right: none; border-bottom: none; }
+.tick-tr { top: 10px; right: 10px; border-left:  none; border-bottom: none; }
+.tick-bl { bottom: 10px; left: 10px;  border-right: none; border-top: none; }
+.tick-br { bottom: 10px; right: 10px; border-left:  none; border-top: none; }
+
+/* PLAY BUTTON OVERLAY */
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--ramp-yellow);
+  border: 4px solid var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow:
+    6px 6px 0 var(--ramp-pink),
+    12px 12px 0 var(--ramp-mag);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow:
+    9px 9px 0 var(--ramp-pink),
+    18px 18px 0 var(--ramp-mag);
+}
+.play-btn:active {
+  transform: translate(-50%, -50%) scale(0.96);
+}
+.play-glyph {
+  width: 56px;
+  height: 56px;
+  margin-left: 6px; /* optical center for triangle */
+  color: var(--ink);
+  position: relative;
+  z-index: 3;
+}
+.play-ring {
+  position: absolute;
+  inset: -8px;
+  border: 3px solid var(--ramp-cyan);
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: ringPulse 2s ease-out infinite;
+}
+.play-ring-2 {
+  animation-delay: 1s;
+}
+@keyframes ringPulse {
+  0%   { transform: scale(1);   opacity: 0.9; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.play-label {
+  position: absolute;
+  bottom: -42px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Bungee', cursive;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--ramp-yellow);
+  white-space: nowrap;
+  text-shadow: 2px 2px 0 var(--ramp-mag);
+}
+
+/* HUD BAR (bottom of frame) */
+.player-hud {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 32px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: var(--ramp-yellow);
+  z-index: 3;
+  gap: 14px;
+}
+.hud-rec {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff3030;
+}
+.hud-rec-dot {
+  width: 8px; height: 8px;
+  background: #ff3030;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff3030;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+.hud-tc { color: var(--ramp-cyan); }
+.hud-meta {
+  margin-left: auto;
+  color: #8fa0ff;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   FINALE STAGE (hidden until play clicked)
+   ============================================================ */
+.finale-stage {
+  position: absolute;
+  inset: 38px 0 0 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 1.2s ease 0.3s;
+}
+body.playing .finale-stage {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* tagline at top */
+.tagline {
+  position: absolute;
+  top: 8vh;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: 'Bungee', cursive;
+  font-size: clamp(22px, 3.8vw, 50px);
+  color: var(--ramp-yellow);
+  letter-spacing: 4px;
+  text-shadow:
+    0 0 12px rgba(0,0,0,0.95),
+    4px 4px 0 var(--ramp-mag),
+    8px 8px 30px rgba(255,62,196,0.4);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
+}
+body.playing .tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* small Andy poster in center */
+.finale-poster {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 26vmin;
+  max-width: 280px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 0 40px rgba(103,232,255,0.35),
+    0 0 80px rgba(255,138,214,0.25),
+    inset 0 0 30px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 1s ease 0.9s, transform 1s ease 0.9s;
+  animation: posterFloat 6s ease-in-out infinite;
+}
+.finale-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+body.playing .finale-poster {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+@keyframes posterFloat {
+  0%, 100% { margin-top: -6px; }
+  50%      { margin-top: 6px; }
+}
+
+/* CTA */
+.cta-btn {
+  position: absolute;
+  bottom: 28vh;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: inline-block;
+  font-family: 'Bungee', cursive;
+  font-size: clamp(18px, 2.4vw, 30px);
+  letter-spacing: 2px;
+  color: var(--ink);
+  background: var(--ramp-yellow);
+  padding: 16px 32px;
+  border: 3px solid var(--ink);
+  box-shadow:
+    5px 5px 0 var(--ramp-pink),
+    10px 10px 0 var(--ramp-mag);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 1s ease 1.2s, transform 1s ease 1.2s, box-shadow 0.15s ease;
+  opacity: 0;
+  white-space: nowrap;
+  z-index: 25;
+}
+body.playing .cta-btn {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.cta-btn:hover {
+  transform: translateX(-50%) translate(-3px, -3px);
+  box-shadow:
+    9px 9px 0 var(--ramp-pink),
+    15px 15px 0 var(--ramp-mag);
+}
+
+/* Star Wars crawl */
+.crawl-stage {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 22vh;
+  perspective: 500px;
+  perspective-origin: 50% 100%;
+  overflow: hidden;
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease 1.5s;
+}
+body.playing .crawl-stage {
+  opacity: 1;
+}
+.crawl-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(4,4,10,0.85) 100%);
+  pointer-events: none;
+}
+.crawl-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform-origin: 50% 0%;
+  transform: translateX(-50%) rotateX(28deg);
+  width: min(50vw, 560px);
+  color: var(--ramp-yellow);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(11px, 1.1vw, 14px);
+  text-align: justify;
+  line-height: 1.4;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(255,207,58,0.3);
+}
+.crawl-text p { margin-bottom: 1.4em; }
+body.playing .crawl-text {
+  animation: crawlUp 50s linear 1.8s infinite;
+}
+@keyframes crawlUp {
+  0%   { top: 100%; }
+  100% { top: -300%; }
+}
+
+/* ============================================================
+   REPLAY BUTTON
+   ============================================================ */
+.replay-btn {
+  position: fixed;
+  top: 52px;
+  right: 16px;
+  background: transparent;
+  border: 1px solid var(--ramp-cyan);
+  color: var(--ramp-cyan);
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 6px 12px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 2s, background 0.15s ease;
+  z-index: 110;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+body.playing .replay-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.replay-btn:hover {
+  background: var(--ramp-cyan);
+  color: var(--ink);
+}
+
+/* ============================================================
+   HYPERSPACE EASTER EGG
+   ============================================================ */
+.hyperspace-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, transparent 0%, #fff 30%, transparent 60%),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 6px,
+      rgba(255,255,255,0.8) 6px,
+      rgba(255,255,255,0.8) 8px
+    );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+body.hyperspace .hyperspace-overlay {
+  animation: hyperflash 1.5s ease-in-out;
+}
+@keyframes hyperflash {
+  0%   { opacity: 0; transform: scale(0.5); }
+  30%  { opacity: 0.6; }
+  60%  { opacity: 1; transform: scale(2); }
+  100% { opacity: 0; transform: scale(4); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+  .bb-mid { display: none; }
+  .player { width: 92vw; }
+  .player-frame { aspect-ratio: 4 / 5; }
+  .play-btn { width: 100px; height: 100px; }
+  .play-glyph { width: 38px; height: 38px; }
+  .play-label { font-size: 11px; bottom: -34px; }
+  .tagline { top: 6vh; font-size: 22px; letter-spacing: 2px; }
+  .crawl-text { width: 88vw; font-size: 12px; }
+  .cta-btn { font-size: 16px; padding: 12px 22px; bottom: 26vh; }
+  .hud-meta { display: none; }
+}

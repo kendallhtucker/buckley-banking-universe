@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A TRANSMISSION · BANKING UNIVERSE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=VT323&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ====== BROADCAST CHROME (top bar) ====== -->
+  <header class="broadcast-bar">
+    <div class="bb-left">
+      <span class="bb-dot"></span>
+      <span class="bb-label">DEEP-SPACE FEED · CH 03</span>
+    </div>
+    <div class="bb-mid">
+      <span class="bb-marquee-text">// A TRANSMISSION FROM DEEP SPACE // A TRANSMISSION FROM DEEP SPACE // A TRANSMISSION FROM DEEP SPACE //</span>
+    </div>
+    <div class="bb-right">
+      <span class="bb-clock" id="bb-clock">00:00:00</span>
+      <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound">
+        <span class="st-icon">♪</span>
+        <span class="st-label">SOUND OFF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ====== STAGE ====== -->
+  <main class="stage" id="stage">
+
+    <!-- starfield bg layers -->
+    <div class="stars stars-back" aria-hidden="true"></div>
+    <div class="stars stars-mid" aria-hidden="true"></div>
+    <div class="stars stars-front" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <!-- ============================================
+         VIDEO PLAYER (click-to-play placeholder)
+         ============================================ -->
+    <div class="player" id="player">
+      <!-- video frame -->
+      <div class="player-frame">
+        <img src="assets/andy-nebula.jpg" alt="A transmission from deep space" class="player-poster" />
+
+        <!-- corner ticks (TV/monitor framing) -->
+        <span class="frame-tick tick-tl"></span>
+        <span class="frame-tick tick-tr"></span>
+        <span class="frame-tick tick-bl"></span>
+        <span class="frame-tick tick-br"></span>
+
+        <!-- play button overlay -->
+        <button id="play-btn" class="play-btn" aria-label="Play transmission">
+          <span class="play-ring"></span>
+          <span class="play-ring play-ring-2"></span>
+          <svg class="play-glyph" viewBox="0 0 60 60" aria-hidden="true">
+            <polygon points="20,12 20,48 50,30" fill="currentColor" />
+          </svg>
+          <span class="play-label">PLAY TRANSMISSION</span>
+        </button>
+
+        <!-- bottom HUD chrome (timecode / REC) -->
+        <div class="player-hud">
+          <span class="hud-rec">
+            <span class="hud-rec-dot"></span> REC
+          </span>
+          <span class="hud-tc" id="hud-tc">00:00:00:00</span>
+          <span class="hud-meta">CH 03 · A. BUCKLEY · 4K</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         FINALE (hidden until play button is clicked)
+         ============================================ -->
+    <div class="finale-stage" id="finale-stage">
+      <!-- tagline (top) -->
+      <div class="tagline">NO FEES. NO MINIMUMS. NO CAPS.</div>
+
+      <!-- shrunken Andy poster in the middle -->
+      <div class="finale-poster">
+        <img src="assets/andy-nebula.jpg" alt="" />
+      </div>
+
+      <!-- CTA -->
+      <a class="cta-btn" href="https://ramp.com/business-banking" target="_blank" rel="noopener">
+        TRY RAMP BANKING TODAY →
+      </a>
+
+      <!-- Star Wars crawl -->
+      <div class="crawl-stage">
+        <div class="crawl-text">
+          <p>RAMP BUSINESS BANKING IS PROVIDED BY PARTNER BANKS,
+          MEMBERS FDIC. DEPOSITS ARE INSURED UP TO STANDARD LIMITS.
+          NO MONTHLY FEES, NO MINIMUM BALANCE, NO LIMITS ON
+          TRANSACTIONS OR USERS.</p>
+
+          <p>NOT A COMMITMENT TO LEND. PRODUCTS AND SERVICES OFFERED
+          BY RAMP BUSINESS CORPORATION. CARDS ISSUED BY SUTTON BANK
+          AND CELTIC BANK, MEMBERS FDIC. RAMP TREASURY OFFERED
+          THROUGH APEX CLEARING.</p>
+
+          <p>EVERY STATEMENT IN THIS BROADCAST IS A DRAMATIZATION
+          OF THE EXISTENTIAL TERROR OF LEGACY BANKING. ACTUAL
+          EXPERIENCES OF LEGACY BANKING MAY BE WORSE.</p>
+
+          <p>THIS TRANSMISSION ORIGINATED FROM A LOCATION SEVERAL
+          LIGHT-YEARS FROM YOUR HOME. WE APOLOGIZE FOR ANY DELAY.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- replay -->
+    <button id="replay" class="replay-btn" aria-label="Replay">
+      ↻ REPLAY
+    </button>
+
+  </main>
+
+  <!-- hyperspace overlay (easter egg) -->
+  <div class="hyperspace-overlay" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
