@@ -119,13 +119,28 @@ document.getElementById('sound-toggle').addEventListener('click', (e) => {
 });
 
 // -------- PLAY → FINALE --------
-document.getElementById('play-btn').addEventListener('click', () => {
+// Use both click and touchend for max mobile compatibility.
+// Listen on .player-frame so taps anywhere in the video frame (not just the
+// small button bullseye) still fire — much more forgiving on small screens.
+let hasPlayed = false;
+function triggerPlay(e) {
+  if (hasPlayed) return;
+  hasPlayed = true;
+  if (e && e.cancelable) e.preventDefault();
   document.body.classList.add('playing');
+}
+const playFrame = document.querySelector('.player-frame');
+const playBtn = document.getElementById('play-btn');
+[playFrame, playBtn].forEach((el) => {
+  if (!el) return;
+  el.addEventListener('click', triggerPlay);
+  el.addEventListener('touchend', triggerPlay, { passive: false });
 });
 
 // -------- REPLAY → back to player --------
 document.getElementById('replay').addEventListener('click', () => {
   document.body.classList.remove('playing');
+  hasPlayed = false;
 });
 
 // -------- BUCKLEY easter egg → hyperspace --------

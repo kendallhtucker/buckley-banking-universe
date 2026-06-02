@@ -239,6 +239,9 @@ body.playing .player {
   align-items: center;
   justify-content: center;
   z-index: 5;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
   box-shadow:
     6px 6px 0 var(--ramp-pink),
     12px 12px 0 var(--ramp-mag);
@@ -260,6 +263,7 @@ body.playing .player {
   color: var(--ink);
   position: relative;
   z-index: 3;
+  pointer-events: none;
 }
 .play-ring {
   position: absolute;
@@ -268,6 +272,7 @@ body.playing .player {
   border-radius: 50%;
   opacity: 0.8;
   animation: ringPulse 2s ease-out infinite;
+  pointer-events: none;
 }
 .play-ring-2 {
   animation-delay: 1s;
