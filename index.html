@@ -81,7 +81,6 @@
           <svg class="play-glyph" viewBox="0 0 60 60" aria-hidden="true">
             <polygon points="20,12 20,48 50,30" fill="currentColor" />
           </svg>
-          <span class="play-label">PLAY TRANSMISSION</span>
         </button>
 
         <!-- bottom HUD chrome (timecode / REC) -->
@@ -93,6 +92,9 @@
           <span class="hud-meta">CH 03 · A. BUCKLEY · 4K</span>
         </div>
       </div>
+
+      <!-- label sits OUTSIDE the frame so it never overlaps the photo -->
+      <span class="play-label">PLAY TRANSMISSION</span>
     </div>
 
     <!-- ============================================
@@ -100,7 +102,7 @@
          ============================================ -->
     <div class="finale-stage" id="finale-stage">
       <!-- tagline (top) -->
-      <div class="tagline">NO FEES. NO MINIMUMS. NO CAPS.</div>
+      <div class="tagline"><span class="tagline-line">NO FEES. NO MINIMUMS.</span> <span class="tagline-line">NO CAPS.</span></div>
 
       <!-- shrunken Andy poster in the middle -->
       <div class="finale-poster">
